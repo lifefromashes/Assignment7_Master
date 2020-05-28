@@ -122,7 +122,7 @@ public class AccountHolderController {
 		log.info("" + user.getAccountHolder());
 		AccountHolder ah = accountHolderRepository.findById(user.getAccountHolder().getId());   //.findOne(user.getAccountHolder().getId());
 		log.info(ah.getFirstName());
-		return ah;//accountHolderRepository.findOne(user.getAccountHolder().getId());
+		return ah;
 	}
 	
 	@PostMapping(value = "/Me/CheckingAccounts")
@@ -131,6 +131,7 @@ public class AccountHolderController {
 		User user = userRepository.findByUserName(jwtTokenUtil.extractUsername(token)).get();
 		AccountHolder account = accountHolderRepository.findOne(user.getAccountHolder().getId());
 		account.addCheckingAccount(checking);
+		user.setAccountHolder(account);
 		accountHolderRepository.save(account);
 		return checking;
 	}
@@ -149,6 +150,7 @@ public class AccountHolderController {
 		User user = userRepository.findByUserName(jwtTokenUtil.extractUsername(token)).get();
 		AccountHolder account = accountHolderRepository.findOne(user.getAccountHolder().getId());
 		account.addSavingsAccount(savings);
+		user.setAccountHolder(account);//added this so remove if doesn't work
 		accountHolderRepository.save(account);
 		return savings;
 	}
@@ -166,6 +168,7 @@ public class AccountHolderController {
 		User user = userRepository.findByUserName(jwtTokenUtil.extractUsername(token)).get();
 		AccountHolder account = accountHolderRepository.findOne(user.getAccountHolder().getId());
 		account.addCDAccount(cdAccount);
+		user.setAccountHolder(account);
 		accountHolderRepository.save(account);
 		return cdAccount;
 	}
@@ -202,6 +205,7 @@ public class AccountHolderController {
 		//accountHolder.setUser(u);
 		accountHolder.setUser(u); //userRepository.findByUserName(accountHolder.getUsername()));
 		accountHolderRepository.save(accountHolder);
+		u.setAccountHolder(accountHolder);
 		userRepository.save(u);
 		log.info("!!" + accountHolder.getUser());
 		return accountHolder;

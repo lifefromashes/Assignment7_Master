@@ -39,7 +39,7 @@ public class User {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonIgnore
-	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
+	@JoinColumn(name = "account_id") // referencedColumnName = "account_id")
 	private AccountHolder accountHolder;
 
 	public User() {//String username, String password, String roles) {
