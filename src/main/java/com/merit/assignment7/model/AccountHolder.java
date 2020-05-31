@@ -21,6 +21,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.merit.assignment7.exceptions.ExceedsAvailableBalanceException;
 import com.merit.assignment7.exceptions.ExceedsCombinedBalanceLimitException;
+import com.merit.assignment7.exceptions.NegativeAmountException;
 
 @Entity
 @Table(name = "accountholders", catalog = "meritamerica7")
@@ -111,6 +112,21 @@ public class AccountHolder implements Comparable<AccountHolder> {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+	
+	//add back in the CheckingAccount addCheckingAccount method so it
+	//gives back and actual populated object
+	
+	public CheckingAccount addCheckingAccount(double openingBalance) throws ExceedsCombinedBalanceLimitException, NegativeAmountException {
+		if(getCheckingBalance() + getSavingsBalance() + openingBalance >= 250000) {
+			throw new ExceedsCombinedBalanceLimitException("Combined balance of your Checking and Savings accounts can not exceed $250,000.");
+		}
+		if(openingBalance < 0) {
+			throw new NegativeAmountException("Can't deposit negative amount.");
+		}
+		CheckingAccount newChkAccount = new CheckingAccount(openingBalance);
+		checkingAccounts.add(newChkAccount);
+		return newChkAccount;
+	}
 
 	public boolean addCheckingAccount(CheckingAccount chkacc) throws ExceedsCombinedBalanceLimitException {
 		if (chkacc == null) {
@@ -122,6 +138,19 @@ public class AccountHolder implements Comparable<AccountHolder> {
 		checkingAccounts.add(chkacc);
 		chkacc.setAccountHolder(this.id);
 		return true;
+	}
+	
+	
+	public SavingsAccount addSavingsAccount(double openingBalance) throws ExceedsCombinedBalanceLimitException, NegativeAmountException {
+		if(getCheckingBalance() + getSavingsBalance() + openingBalance >= 250000) {
+			throw new ExceedsCombinedBalanceLimitException("Combined balance of your Checking and Savings accounts can not exceed $250,000.");
+		}
+		if(openingBalance < 0) {
+			throw new NegativeAmountException("Can't deposit negative amount.");
+		}
+		SavingsAccount newSavAccount = new SavingsAccount(openingBalance);
+		savingsAccounts.add(newSavAccount);
+		return newSavAccount;
 	}
 
 	public boolean addSavingsAccount(SavingsAccount savacc) throws ExceedsCombinedBalanceLimitException {
@@ -143,6 +172,15 @@ public class AccountHolder implements Comparable<AccountHolder> {
 		cdAccounts.add(cdacc);
 		cdacc.setAccountHolder(this.id);
 		return true;
+	}
+	
+	public CDAccount addCDAccount(CDOffering offering, double openingBalance) throws NegativeAmountException{
+		if(openingBalance < 0) {
+			throw new NegativeAmountException("Unable to open with negative amount");
+		}
+		CDAccount newCDAccount = new CDAccount(offering, openingBalance);
+		cdAccounts.add(newCDAccount);
+		return newCDAccount;
 	}
 
 	public double getCheckingBalance() {

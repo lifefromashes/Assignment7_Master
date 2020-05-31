@@ -22,6 +22,11 @@ public class CDAccount extends BankAccount{
 		super();
 	}
 	
+	public CDAccount(CDOffering offering, double openingBalance){
+		super(openingBalance, offering.getInterestRate());
+		this.term = offering.getTerm();
+	}
+	
 	public CDAccount(double balance, double interestRate, long accountNumber, Date accountOpenedOn) {
 		super(balance, interestRate, accountNumber, accountOpenedOn);
 	}

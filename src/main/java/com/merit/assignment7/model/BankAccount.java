@@ -112,6 +112,8 @@ public class BankAccount {
 	public void setAccountOpenedOn(Date accountOpenedOn) {
 		this.accountOpenedOn = accountOpenedOn;
 	}
+	
+	
 
 }
 
